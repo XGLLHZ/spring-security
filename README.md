@@ -11,4 +11,4 @@ spring security demo
 - 登出
 - 分布式配置
 - AuthorizationFilter 授权
-- FilterSecurityInterceptor url/express 授权
+- FilterSecurityInterceptor url/expression 授权
