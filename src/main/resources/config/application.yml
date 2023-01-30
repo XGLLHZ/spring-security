@@ -1,0 +1,9 @@
+################### spring 配置 ###################
+spring:
+  application:
+    name: spring-security
+  profiles:
+    active: dev
+  main:
+    allow-bean-definition-overriding: true
+

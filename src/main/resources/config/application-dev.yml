@@ -1,0 +1,69 @@
+################### tomcat 配置 ###################
+server:
+  port: 9624
+  servlet:
+    context-path: /security
+  tomcat:
+    uri-encoding: UTF-8
+  netty:
+    connection-timeout: 5000
+
+################### 数据源配置 ###################
+spring:
+  datasource:   # 数据库
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      auto-commit: true   # 从池中返回的连接自动提交
+      connection-timeout: 30000   # 连接超时时间
+      connection-test-query: select 1
+      minimum-idle: 5   # 最小空闲连接数
+      maximum-pool-size: 10   # 最大连接数
+      max-lifetime: 1800000 # 池中连接最大生存期
+      idle-timeout: 600000   # 空闲连接存活最大时间
+      pool-name: connection-pool-name   # 连接池名称
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://ip:3306/springcloud-demo?useUnicode=true&characterEncoding=utf8&useSSL=false&&serverTimezone=UTC
+    username: *
+    password: *
+
+  redis:   # redis 缓存
+    host: *
+    port: 6379
+    password:    # 默认为空
+    database: 0   # 默认为 0
+    timeout: 6000
+    jedis:
+      pool:
+        max-active: 300   # 最大连接数（负值表示没有限制）
+        max-idle: 300   # 最大空闲连接数
+        min-idle: 50   # 最小空闲连接数
+
+################### mybatis-plus 配置 ###################
+mybatis-plus:
+  mapper-locations: classpath*:mapper/*.xml
+  type-aliases-package: org.xgllhz.security
+  global-config:
+    db-config:
+      id-type: auto
+      logic-delete-field: delete_flag
+      logic-not-delete-value: 0
+      logic-delete-value: 1
+  configuration:
+    map-underscore-to-camel-case: true
+    cache-enabled: false
+    jdbc-type-for-null: null   #配置JdbcTypeForNull, oracle数据库必须配置
+
+################### app 配置 ###################
+app:
+  security:
+    redis-expiration-timeout: 604800   # redis 认证信息有效时间（默认 7 * 24 * 60 * 60 单位 s）
+  file:
+    avatar-dir: /Users/xgllhz/Documents/project/github/tmp
+  oss:
+    end-point: http://oss-cn-beijing.aliyuncs.com
+    key-id: *
+    key-secret: *
+    bucket: xgllhz
+    file-dir: myblog-admin/
+    image-url: *
+

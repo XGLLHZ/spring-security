@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.xgllhz.security.mapper.PermMapper">
+
+    <select id="listPerm" resultType="PermEntity">
+        select
+            p.id,
+            p.parent_id,
+            p.perm_name,
+            p.perm_url,
+            p.perm_type,
+            p.perm_sort,
+            p.create_time,
+            p.update_time
+        from sys_perm p
+        where p.delete_flag = 0
+
+        <if test="condition.permName != null and condition.permName != ''">
+            and p.perm_name like '%${condition.permName}%'
+        </if>
+
+        <if test="condition.permUrl != null and condition.permUrl != ''">
+            and p.perm_url like '%${condition.permUrl}%'
+        </if>
+
+        <if test="condition.permType != null">
+            and p.perm_type = #{condition.permType}
+        </if>
+
+        order by p.update_time desc
+    </select>
+
+    <select id="allPermRole" resultMap="permRoleMap">
+        select
+            p.id,
+            p.perm_url,
+            r.id as role_id,
+            r.role_namey
+        from sys_perm p
+        left join sys_role_perm rp
+        on rp.perm_id = p.id
+        and rp.delete_flag = 0
+        left join sys_role r
+        on r.id = rp.role_id
+        and r.delete_flag = 0
+        where p.delete_flag = 0
+    </select>
+
+    <resultMap id="permRoleMap" type="org.xgllhz.security.entity.PermEntity">
+        <id column="id" property="id" />
+        <result column="perm_url" property="permUrl" />
+        <collection property="roleList" ofType="org.xgllhz.security.entity.RoleEntity">
+            <id column="role_id" property="id" />
+            <result column="role_namey" property="roleNamey" />
+        </collection>
+    </resultMap>
+
+</mapper>
+

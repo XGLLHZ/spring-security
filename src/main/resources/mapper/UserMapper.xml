@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.xgllhz.security.mapper.UserMapper">
+
+    <select id="listUser" resultType="UserEntity">
+        select
+            u.id,
+            u.account,
+            u.password,
+            u.account_type,
+            u.nickname,
+            u.account_expire_state,
+            u.password_expire_state,
+            u.lock_state,
+            u.enable_state,
+            u.create_time,
+            u.update_time
+        from sys_user u
+        where u.delete_flag = 0
+
+        <if test="condition.account != null and condition.account != ''">
+            and u.account like '%${condition.account}%'
+        </if>
+
+        <if test="condition.accountType != null">
+            and u.account_type = #{condition.accountType}
+        </if>
+
+        <if test="condition.nickname != null and condition.nickname != ''">
+            and u.nickname like '%${condition.nickname}%'
+        </if>
+
+        <if test="condition.accountExpireState != null">
+            and u.account_expire_state = #{condition.accountExpireState}
+        </if>
+
+        <if test="condition.passwordExpireState != null">
+            and u.password_expire_state = #{passwordExpireState}
+        </if>
+
+        <if test="condition.lockState != null">
+            and u.lock_state = #{lockState}
+        </if>
+
+        <if test="condition.enableState != null">
+            and u.enable_state = #{enableState}
+        </if>
+
+        order by u.update_time desc
+    </select>
+
+    <select id="listRoleByUserId" resultType="RoleEntity">
+        select
+            r.id,
+            r.role_namey,
+            r.role_namez,
+            r.create_time,
+            r.update_time
+        from sys_user_role ur
+        left join sys_role r
+        on ur.role_id = r.id
+        and r.delete_flag = 0
+        where ur.delete_flag = 0
+        and ur.user_id = #{condition.id}
+    </select>
+
+    <select id="listPermByUserId" resultType="PermEntity">
+        select
+            p.id,
+            p.parent_id,
+            p.perm_name,
+            p.perm_url,
+            p.router_component,
+            p.router_path,
+            p.router_icon,
+            p.router_hidden,
+            p.perm_type,
+            p.perm_sort,
+            p.create_time,
+            p.update_time,
+            count(distinct p.id)
+        from sys_user_role ur
+        left join sys_role_perm rp
+        on ur.role_id = rp.role_id
+        and rp.delete_flag = 0
+        left join sys_perm p
+        on p.id = rp.perm_id
+        and p.delete_flag = 0
+        where ur.delete_flag = 0
+        and ur.user_id = #{condition.id}
+
+        group by p.id
+
+        order by p.perm_sort desc
+    </select>
+
+</mapper>
+
