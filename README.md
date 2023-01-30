@@ -1,5 +1,6 @@
 # spring-security
 spring security demo  
+详见: [走近科学之《spring security 的秘密》](https://blog.csdn.net/XGLLHZ/article/details/126215769?spm=1001.2014.3001.5501) [spring security 使用示例](https://blog.csdn.net/XGLLHZ/article/details/126433201#comments_24981878)
 ### 版本
 - java: 11
 - spring boot: 2.7.0
